@@ -1,0 +1,16 @@
+#Stephanie Galla
+#22April2019
+
+#Resequencing Filtering
+#-v snps selects for SNPs only.
+# -m2 -M2 selects for biallelic SNPs.
+# -q 0.05:minor is an MAF cutoff of 0.05 (could also use the filter MAF option, but this seems to work well)
+# AVG(FMT/DP)>10 is an average minimum depth of 10.
+# %QUAL>20 filters for quality above 20. 
+
+bcftools view Kaki_VariantCalls.bcf -v snps -m 2 -M 2 -q 0.05:minor -i 'AVG(FMT/DP)>10 & %QUAL>20' -o Kaki_FinalVariantCalls_BCFTools_Biallelic_SNPsOnly_MAF0.05_AVGDP10_Q20.vcf 
+
+#prunes for LD R2 of 0.6 with a window of 1000bp
+#-e excludes sites that have more than 0.1 missingness. 
+
+bcftools +prune -l 0.6 -w 1000 -e "F_MISSING>=0.1" Kaki_FinalVariantCalls_BCFTools_Biallelic_SNPsOnly_MAF0.05_AVGDP10_Q20.vcf -Ov -o Kaki_FinalVariantCalls_BCFTools_Biallelic_SNPsOnly_MAF0.05_AVGDP10_Q20_LD0.6_Missing0.1.vcf
